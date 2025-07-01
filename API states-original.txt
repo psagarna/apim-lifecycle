@@ -526,8 +526,8 @@
 						"Event": "Publish"
 					},
 					{
-						"Event": "EnviarGit",
-						"Target": "EnviadoGit"
+						"Event": "Promote",
+						"Target": "Promoted"
 					}
 				],
 				"State": "Published"
@@ -555,7 +555,7 @@
 				"State": "Deprecated"
 			},
 			{
-				"State": "EnviadoGit",
+				"State": "Promoted",
 				"Transitions": [
 					{
 						"Event": "Re-Submit",
