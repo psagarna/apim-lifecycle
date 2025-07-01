@@ -52,24 +52,14 @@ public class PromoteWorkflowExecutor extends APIStateChangeSimpleWorkflowExecuto
 
         Map<Integer, Integer> subscriberMap = new HashMap<>();
         APIStateWorkflowDTO apiStateWorkFlowDTO = (APIStateWorkflowDTO) workflowDTO;
-
-        log.error("ENTROOOOOOOOOOOO:"+apiStateWorkFlowDTO.getApiName());
-        //Identifier identifier = new APIIdentifier(apiStateWorkFlowDTO.getApiProvider(),
-          //                                       apiStateWorkFlowDTO.getApiName(), apiStateWorkFlowDTO.getApiVersion());
-        
-        if ("ENVIADOGIT".equals(apiStateWorkFlowDTO.getApiCurrentState())) {
-
-            log.error("LLAMAR A GIT: API"+apiStateWorkFlowDTO.getApiName());
+         
+        if ("PROMOTED".equals(apiStateWorkFlowDTO.getApiCurrentState())) {
 
             URL serviceEndpointURL = new URL("https://pablo.requestcatcher.com/test");
-            HttpClient httpClient = APIUtil.getHttpClient(serviceEndpointURL.getPort(),
-                    serviceEndpointURL.getProtocol());
-            HttpPost httpPost = new HttpPost("https://pablo.requestcatcher.com/test"+"?name="+apiStateWorkFlowDTO.getApiName()+"&version="+apiStateWorkFlowDTO.getApiVersion());
-//            String authHeader = "Basic " + new String(encodedAuth);
-//            httpPost.setHeader(HttpHeaders.AUTHORIZATION, authHeader);
-//            StringEntity requestEntity = new StringEntity(payload.toJSONString(), ContentType.APPLICATION_JSON);
+            HttpClient httpClient = APIUtil.getHttpClient(serviceEndpointURL.getPort(),serviceEndpointURL.getProtocol());
+            HttpPost httpPost = new HttpPost("https://pablo.requestcatcher.com/test"+"?name="+apiStateWorkFlowDTO.getApiName()
+                                            +"&version="+apiStateWorkFlowDTO.getApiVersion());
 
- //           httpPost.setEntity(requestEntity);
             try {
                 HttpResponse response = httpClient.execute(httpPost);
                 String respuesta=response.getStatusLine().getStatusCode()+ " " + response.getStatusLine().getReasonPhrase();
