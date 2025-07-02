@@ -1,0 +1,8 @@
+name: Mi Workflow Manual
+
+on:
+  workflow_dispatch:
+    inputs:
+      mensaje:
+        description: 'Mensaje de prueba'
+        required: false
