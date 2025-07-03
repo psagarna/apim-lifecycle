@@ -21,11 +21,16 @@ import org.wso2.carbon.apimgt.impl.utils.APIUtil;
 import org.wso2.carbon.apimgt.impl.workflow.APIStateChangeSimpleWorkflowExecutor;
 import org.wso2.carbon.apimgt.impl.workflow.APIStateWorkflowDTO;
 import org.wso2.carbon.apimgt.impl.workflow.WorkflowException;
-
+import org.wso2.carbon.apimgt.persistence.APIPersistence;
+import org.wso2.carbon.apimgt.persistence.dto.PublisherAPI;
+import org.wso2.carbon.apimgt.persistence.exceptions.APIPersistenceException;
+import org.wso2.carbon.apimgt.impl.factory.PersistenceFactory;
+import org.wso2.carbon.apimgt.persistence.dto.Organization;
 
 import java.io.IOException;
 import java.nio.charset.Charset;
 import java.util.List;
+
 
 import org.apache.axis2.util.URL;
 import org.apache.commons.codec.binary.Base64;
@@ -52,7 +57,32 @@ public class PromoteWorkflowExecutor extends APIStateChangeSimpleWorkflowExecuto
 
         Map<Integer, Integer> subscriberMap = new HashMap<>();
         APIStateWorkflowDTO apiStateWorkFlowDTO = (APIStateWorkflowDTO) workflowDTO;
-         
+        APIPersistence apiPersistenceInstance = PersistenceFactory.getAPIPersistenceInstance();
+        
+        //Imprime la acción siguiente del ciclo de vida del API
+        String nextAction= apiStateWorkFlowDTO.getApiLCAction();
+        log.error("PromoteWorkflowExecutor: Next Action: " + nextAction);
+
+        if(nextAction!=null && "Promoted".equalsIgnoreCase(nextAction.trim())){
+            log.error("Eligio la accion siguiente: " + nextAction);
+        }
+        Organization org = new Organization(apiStateWorkFlowDTO.getTenantDomain());
+        PublisherAPI publisherAPI;
+        
+        try {
+            publisherAPI = apiPersistenceInstance.getPublisherAPI(org, apiStateWorkFlowDTO.getApiUUID());
+            log.error("Technnical OWNER: " + publisherAPI.getTechnicalOwner());
+            
+        } catch(APIPersistenceException e) {
+            String errorMsg = "Error while retrieving API from persistence layer";
+            log.error(errorMsg, e);
+            throw new WorkflowException(errorMsg, e);
+        }
+
+        if (publisherAPI != null) {
+            log.error("Entro Publisher API: ");
+        }
+
         if ("PROMOTED".equals(apiStateWorkFlowDTO.getApiCurrentState())) {
 
             URL serviceEndpointURL = new URL("https://pablo.requestcatcher.com/test");
