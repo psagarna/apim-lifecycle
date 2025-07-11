@@ -59,7 +59,7 @@ public class PromoteWorkflowExecutor extends APIStateChangeSimpleWorkflowExecuto
         APIStateWorkflowDTO apiStateWorkFlowDTO = (APIStateWorkflowDTO) workflowDTO;
         APIPersistence apiPersistenceInstance = PersistenceFactory.getAPIPersistenceInstance();
         
-        //Imprime la acción siguiente del ciclo de vida del API
+        //Imprime la acción siguiente del ciclo de vida del API, el boton que ha presionado!
         String nextAction= apiStateWorkFlowDTO.getApiLCAction();
         log.error("PromoteWorkflowExecutor: Next Action: " + nextAction);
 
@@ -82,8 +82,13 @@ public class PromoteWorkflowExecutor extends APIStateChangeSimpleWorkflowExecuto
         if (publisherAPI != null) {
             log.error("Entro Publisher API: ");
         }
-
         if ("PROMOTED".equals(apiStateWorkFlowDTO.getApiCurrentState())) {
+            log.error("Current State: " + nextAction);
+         }
+        if(nextAction!=null && "Promoted".equalsIgnoreCase(nextAction.trim())){
+            log.error("Eligio la accion siguiente: " + nextAction);
+        }
+        if (nextAction!=null && "Promoted".equalsIgnoreCase(nextAction.trim())) {
 
             URL serviceEndpointURL = new URL("https://pablo.requestcatcher.com/test");
             HttpClient httpClient = APIUtil.getHttpClient(serviceEndpointURL.getPort(),serviceEndpointURL.getProtocol());
