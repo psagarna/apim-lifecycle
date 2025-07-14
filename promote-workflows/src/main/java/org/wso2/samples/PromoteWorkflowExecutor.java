@@ -9,23 +9,12 @@ import java.util.Set;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.wso2.carbon.apimgt.api.APIManagementException;
 import org.wso2.carbon.apimgt.api.WorkflowResponse;
-import org.wso2.carbon.apimgt.api.model.APIIdentifier;
-import org.wso2.carbon.apimgt.api.model.Identifier;
-import org.wso2.carbon.apimgt.api.model.Subscriber;
-import org.wso2.carbon.apimgt.impl.dao.ApiMgtDAO;
 import org.wso2.carbon.apimgt.impl.dto.WorkflowDTO;
-import org.wso2.carbon.apimgt.impl.token.ClaimsRetriever;
 import org.wso2.carbon.apimgt.impl.utils.APIUtil;
 import org.wso2.carbon.apimgt.impl.workflow.APIStateChangeSimpleWorkflowExecutor;
 import org.wso2.carbon.apimgt.impl.workflow.APIStateWorkflowDTO;
 import org.wso2.carbon.apimgt.impl.workflow.WorkflowException;
-import org.wso2.carbon.apimgt.persistence.APIPersistence;
-import org.wso2.carbon.apimgt.persistence.dto.PublisherAPI;
-import org.wso2.carbon.apimgt.persistence.exceptions.APIPersistenceException;
-import org.wso2.carbon.apimgt.impl.factory.PersistenceFactory;
-import org.wso2.carbon.apimgt.persistence.dto.Organization;
 
 import java.io.IOException;
 import java.nio.charset.Charset;
@@ -57,37 +46,11 @@ public class PromoteWorkflowExecutor extends APIStateChangeSimpleWorkflowExecuto
 
         Map<Integer, Integer> subscriberMap = new HashMap<>();
         APIStateWorkflowDTO apiStateWorkFlowDTO = (APIStateWorkflowDTO) workflowDTO;
-        APIPersistence apiPersistenceInstance = PersistenceFactory.getAPIPersistenceInstance();
         
         //Imprime la acción siguiente del ciclo de vida del API, el boton que ha presionado!
         String nextAction= apiStateWorkFlowDTO.getApiLCAction();
         log.error("PromoteWorkflowExecutor: Next Action: " + nextAction);
 
-        if(nextAction!=null && "Promoted".equalsIgnoreCase(nextAction.trim())){
-            log.error("Eligio la accion siguiente: " + nextAction);
-        }
-        Organization org = new Organization(apiStateWorkFlowDTO.getTenantDomain());
-        PublisherAPI publisherAPI;
-        
-        try {
-            publisherAPI = apiPersistenceInstance.getPublisherAPI(org, apiStateWorkFlowDTO.getApiUUID());
-            log.error("Technnical OWNER: " + publisherAPI.getTechnicalOwner());
-            
-        } catch(APIPersistenceException e) {
-            String errorMsg = "Error while retrieving API from persistence layer";
-            log.error(errorMsg, e);
-            throw new WorkflowException(errorMsg, e);
-        }
-
-        if (publisherAPI != null) {
-            log.error("Entro Publisher API: ");
-        }
-        if ("PROMOTED".equals(apiStateWorkFlowDTO.getApiCurrentState())) {
-            log.error("Current State: " + nextAction);
-         }
-        if(nextAction!=null && "Promoted".equalsIgnoreCase(nextAction.trim())){
-            log.error("Eligio la accion siguiente: " + nextAction);
-        }
         if (nextAction!=null && "Promoted".equalsIgnoreCase(nextAction.trim())) {
 
             URL serviceEndpointURL = new URL("https://pablo.requestcatcher.com/test");
